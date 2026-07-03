@@ -46,7 +46,9 @@ export default function RegisterPage() {
       } else if (typeof err.message === 'string') {
         setError(err.message);
       } else {
-        setError('Registration rejected by backend validation rules.');
+        setError(
+  'Password must be at least 8 characters and include an uppercase letter, lowercase letter, number, and special character.'
+);
       }
     } finally {
       setSubmitting(false);
@@ -105,6 +107,20 @@ export default function RegisterPage() {
               </button>
             </div>
           </div>
+
+          <p className="mt-2 ml-1 text-[11px] text-text-muted leading-5">
+  Password must contain:
+  <br />
+  • Minimum 8 characters
+  <br />
+  • One uppercase letter (A-Z)
+  <br />
+  • One lowercase letter (a-z)
+  <br />
+  • One number (0-9)
+  <br />
+  • One special character (!@#$%^&*)
+</p>
 
           <button type="submit" disabled={submitting} className="w-full py-3.5 mt-2 bg-gradient-primary text-white rounded-[12px] text-[15px] font-bold disabled:opacity-50 hover:opacity-90 hover:scale-[1.01] hover:shadow-[0_4px_20px_rgba(6,182,212,0.3)] transition-all">
             {submitting ? 'Creating account...' : 'Register'}
