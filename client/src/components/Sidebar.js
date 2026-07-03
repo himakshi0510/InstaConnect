@@ -13,7 +13,6 @@ export default function Sidebar({ onCreatePostClick }) {
     { label: 'Home', path: '/', icon: '🏠' },
     { label: 'Explore', path: '/explore', icon: '🧭' },
     { label: 'Search', path: '/search', icon: '🔍' },
-    { label: 'Notifications', path: '/notifications', icon: '🔔' },
     { label: 'Profile', path: `/profile/${user?.username}`, icon: '👤', dynamic: true },
   ];
 

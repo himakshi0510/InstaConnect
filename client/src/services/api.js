@@ -22,14 +22,9 @@ api.interceptors.request.use(
 // ─── Response Interceptor: Auto-unwrap { success, data, message } ─────────
 api.interceptors.response.use(
   (response) => {
-    // Server always returns { success, data, message }
-    // We return response.data so each service's `return response.data`
-    // correctly gets the inner payload
     return response.data;
   },
   (error) => {
-    // Error responses (4xx, 5xx) still propagate as-is
-    // err.response?.data?.message still works in catch blocks
     return Promise.reject(error);
   }
 );
