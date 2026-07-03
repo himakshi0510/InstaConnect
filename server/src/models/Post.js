@@ -53,15 +53,16 @@ const Post = {
         (SELECT COUNT(*) FROM likes l WHERE l.postId = p.id) AS likesCount,    
         (SELECT COUNT(*) FROM comments c WHERE c.postId = p.id) AS commentsCount, 
         IF(? IS NULL, 0, EXISTS(SELECT 1 FROM likes l WHERE l.userId = ? AND l.postId = p.id)) AS isLiked
+         ,IF(? IS NULL, 0, p.userId = ?) AS isOwnPost
       FROM posts p
       INNER JOIN users u ON p.userId = u.id
       WHERE (p.userId = ? OR p.userId IN (SELECT followeeId FROM follows WHERE followerId = ?))
     `;
     
-    const params = [currentUserId, currentUserId, currentUserId, currentUserId];
+    const params = [currentUserId, currentUserId, currentUserId, currentUserId, currentUserId, currentUserId];
 
     if (cursor) {
-      // cursor is an ISO date string
+      // cursor is a MySQL DATETIME string: 'YYYY-MM-DD HH:MM:SS'
       query += ` AND p.createdAt < ?`;
       params.push(cursor);
     }
@@ -69,16 +70,17 @@ const Post = {
     query += ` ORDER BY p.createdAt DESC LIMIT ?`;
     params.push(limit + 1); // Fetch 1 extra to check if there is more
 
-    const [rows] = await pool.execute(query, params);
+    const [rows] = await pool.query(query, params);
     
     const hasMore = rows.length > limit;
     const posts = hasMore ? rows.slice(0, limit) : rows;
-    const nextCursor = hasMore && posts.length > 0 ? posts[posts.length - 1].createdAt : null;
+    const toMySQLDate = (d) =>
+    new Date(d).toISOString().slice(0, 19).replace('T', ' ');
 
     return {
       posts,
       hasMore,
-      nextCursor
+      nextCursor: hasMore && posts.length > 0 ? toMySQLDate(posts[posts.length - 1].createdAt) : null,
     };
   },
 
@@ -95,7 +97,7 @@ const Post = {
       ORDER BY p.createdAt DESC
       LIMIT ? OFFSET ?
     `;
-    const [rows] = await pool.execute(query, [limit, offset]);
+    const [rows] = await pool.query(query, [limit, offset]);
     return rows;
   },
 
@@ -115,8 +117,8 @@ const Post = {
       SELECT 
         p.id, 
         p.imageUrl,
-        (SELECT COUNT(*) FROM likes l WHERE l.postId = p.id) AS likesCount,    // ✅ was likeCount
-        (SELECT COUNT(*) FROM comments c WHERE c.postId = p.id) AS commentsCount // ✅ was commentCount
+        (SELECT COUNT(*) FROM likes l WHERE l.postId = p.id) AS likesCount,    
+        (SELECT COUNT(*) FROM comments c WHERE c.postId = p.id) AS commentsCount 
       FROM posts p
       WHERE p.userId = ?
       ORDER BY p.createdAt DESC

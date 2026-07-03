@@ -39,6 +39,11 @@ export default function HomePage() {
     setPosts(prev => [newPost, ...prev]);
   };
 
+  // remove deleted post from local list without a full page reload
+  const handlePostDeleted = (deletedId) => {
+    setPosts(prev => prev.filter(p => p.id !== deletedId));
+  };
+
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-base">
@@ -71,6 +76,7 @@ export default function HomePage() {
                 key={postItem.id} 
                 post={postItem} 
                 currentUserId={user?.id}
+                onDeleteSuccess={handlePostDeleted}
               />
             ))}
           </div>

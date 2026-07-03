@@ -66,6 +66,7 @@ const postController = {
   async getFeed(req, res, next) {
     // Standard middleware compatibility
     const currentUserId = req.user.userId;
+    console.log('🔍 getFeed called, currentUserId:', currentUserId); 
     const { cursor, limit } = req.query;
     const feedLimit = parseInt(limit || '10', 10);
 

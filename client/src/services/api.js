@@ -25,6 +25,12 @@ api.interceptors.response.use(
     return response.data;
   },
   (error) => {
+    // Surface the backend's error message so callers reading err.message
+    // get the real reason (e.g. 'Invalid email or password') instead of
+    // the generic Axios string ('Request failed with status code 401').
+    if (error.response?.data?.message) {
+      error.message = error.response.data.message;
+    }
     return Promise.reject(error);
   }
 );
@@ -98,8 +104,9 @@ export const userService = {
 // ─── Post Services ────────────────────────────────────────────
 export const postService = {
   getFeed: async (cursor, limit = 10) => {
-    const params = cursor ? `?cursor=${cursor}&limit=${limit}` : `?limit=${limit}`;
-    const response = await api.get(`/posts/feed${params}`);
+    const response = await api.get('/posts/feed', {
+  params: { limit, ...(cursor ? { cursor } : {}) },
+ });
     return response.data;
   },
   getExplore: async (page = 1, limit = 18) => {

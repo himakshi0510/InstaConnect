@@ -17,8 +17,8 @@ export default function ExplorePage() {
         setLoading(true);
         const data = await postService.getExplore(1, 18); // Fetch page 1, limit to 18 posts
         
-        // Extract array depending on your pagination data structure wrapper
-        const exploreItems = Array.isArray(data) ? data : data?.docs || data?.posts || [];
+        // getPaginationData returns { items, pagination } — extract the items array
+        const exploreItems = Array.isArray(data) ? data : data?.items || [];
         setPosts(exploreItems);
       } catch (err) {
         console.error('Failed to load explore feed grid:', err);

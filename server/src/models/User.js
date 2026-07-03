@@ -96,7 +96,7 @@ const User = {
       WHERE username LIKE ? OR fullName LIKE ?
       LIMIT ?
     `;
-    const [rows] = await pool.execute(query, [formattedQuery, formattedQuery, limit]);
+    const [rows] = await pool.query(query, [formattedQuery, formattedQuery, limit]);
     return rows;
   }
 };

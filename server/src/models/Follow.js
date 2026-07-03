@@ -41,7 +41,9 @@ const Follow = {
       WHERE f.followeeId = ?
       LIMIT ? OFFSET ?
     `;
-    const [rows] = await pool.execute(query, [currentUserId, currentUserId, userId, limit, offset]);
+    // pool.query used instead of pool.execute to avoid prepared-statement
+    // type-mismatch errors with LIMIT/OFFSET integer parameters.
+    const [rows] = await pool.query(query, [currentUserId, currentUserId, userId, limit, offset]);
     return rows;
   },
 
@@ -60,7 +62,9 @@ const Follow = {
       WHERE f.followerId = ?
       LIMIT ? OFFSET ?
     `;
-    const [rows] = await pool.execute(query, [currentUserId, currentUserId, userId, limit, offset]);
+    // pool.query used instead of pool.execute to avoid prepared-statement
+    // type-mismatch errors with LIMIT/OFFSET integer parameters.
+    const [rows] = await pool.query(query, [currentUserId, currentUserId, userId, limit, offset]);
     return rows;
   },
 
@@ -80,7 +84,9 @@ const Follow = {
       ORDER BY RAND()
       LIMIT ?
     `;
-    const [rows] = await pool.execute(query, [userId, userId, limit]);
+    // pool.query used instead of pool.execute to avoid prepared-statement
+    // type-mismatch errors with LIMIT integer parameters.
+    const [rows] = await pool.query(query, [userId, userId, limit]);
     return rows;
   }
 };

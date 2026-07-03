@@ -33,7 +33,9 @@ const Comment = {
       ORDER BY c.createdAt ASC
       LIMIT ? OFFSET ?
     `;
-    const [rows] = await pool.execute(query, [postId, limit, offset]);
+    // pool.query used instead of pool.execute to avoid prepared-statement
+    // type-mismatch errors with LIMIT/OFFSET integer parameters.
+    const [rows] = await pool.query(query, [postId, limit, offset]);
     return rows;
   },
 

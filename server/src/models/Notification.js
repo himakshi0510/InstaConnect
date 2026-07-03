@@ -42,7 +42,9 @@ const Notification = {
       ORDER BY n.createdAt DESC
       LIMIT ? OFFSET ?
     `;
-    const [rows] = await pool.execute(query, [recipientUserId, limit, offset]);
+    // pool.query used instead of pool.execute to avoid prepared-statement
+    // type-mismatch errors with LIMIT/OFFSET integer parameters.
+    const [rows] = await pool.query(query, [recipientUserId, limit, offset]);
     return rows;
   },
 
