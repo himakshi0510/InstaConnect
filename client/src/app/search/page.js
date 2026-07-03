@@ -94,7 +94,7 @@ export default function SearchPage() {
           </div>
         ) : query.trim() ? (
           <div className="text-center py-16 text-text-muted text-[14px]">
-            No users found matching "{query}"
+            No users found matching <span className="font-semibold">{query}</span>
           </div>
         ) : (
           <div className="text-center py-16 text-text-muted text-[14px] flex flex-col items-center">
