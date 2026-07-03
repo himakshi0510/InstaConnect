@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-base text-text-primary font-sans antialiased;
+    /* Default to dark mode theme as requested */
+  }
+
+  /* Custom Webkit Scrollbar */
+  ::-webkit-scrollbar { 
+    width: 6px; 
+  }
+  ::-webkit-scrollbar-track { 
+    background: #111111; 
+  }
+  ::-webkit-scrollbar-thumb { 
+    background: #2A2A2A; 
+    border-radius: 3px; 
+  }
+  ::-webkit-scrollbar-thumb:hover { 
+    background: #A855F7; 
+  }
+
+  /* Default selection styling */
+  ::selection {
+    background: rgba(168, 85, 247, 0.3);
+    color: #F5F5F5;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .bg-gradient-aurora-text {
+    @apply bg-gradient-aurora bg-clip-text text-transparent;
+  }
+}
